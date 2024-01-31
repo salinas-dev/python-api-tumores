@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API TUMORES</title>
+     <!-- Importar la librería jQuery -->
+     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+     <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f8f8; /* Color de fondo general */
+            margin: 0;
+            padding: 100px;
+        }
+    
+        h2 {
+            color: #333; /* Color del texto del encabezado */
+        }
+    
+        div {
+            margin-bottom: 20px;
+            padding: 100px;
+            border: 2px solid #b2d8d8; /* Color del borde */
+            border-radius: 10px; /* Bordes redondeados */
+            background-color: #e6f3f3; /* Color del fondo del div */
+        }
+    
+        img {
+            max-width: 100%; /* Imágenes responsivas */
+            display: block; /* Eliminar espacio adicional debajo de las imágenes */
+            margin: 100; /* Centrar las imágenes */
+        }
+    
+        #data-summary {
+            background-color: #f0f8ff; /* Color de fondo del resumen de datos */
+            padding: 10px;
+            border: 2px solid #add8e6; /* Color del borde del resumen de datos */
+            border-radius: 10px; /* Bordes redondeados */
+            margin-bottom: 20px;
+        }
+    
+        #data-table {
+            background-color: #f0fff0; /* Color de fondo de la tabla de datos */
+            padding: 10px;
+            border-radius: 10px; /* Bordes redondeados */
+        }
+    </style>
+    
+
+
+
+    </head>
+<body>
+    <h2>Imagenes MRI</h2>
+    <!-- Divs para mostrar las imágenes -->
+
+    <div>
+        <img src="./img/imagen_3.png">
+    </div>
+    <div>
+        <img src="./img/imagen_4.png">
+    </div>
+    <div>
+        <img src="./img/imagen_5.png">
+    </div>
+
+    <!-- Div para mostrar los datos específicos -->
+    <div id="data-summary"></div>
+
+    <!-- Div para mostrar la tabla de datos -->
+    <div id="data-table"></div>
+
+    <script>
+        // Crear una función para cargar los datos y mostrar la tabla
+        function loadAndDisplayData() {
+            // Realizar una petición AJAX para cargar los datos del CSV
+            $.ajax({
+                type: "GET",
+                url: "./data_mask.csv",  // Ajusta la ruta al archivo CSV
+                dataType: "text",
+                success: function(data) {
+                    // Convertir los datos CSV en una tabla HTML
+                    const tableHtml = csvToHtmlTable(data);
+                    
+                    // Mostrar la tabla en el div correspondiente
+                    $('#data-table').html(tableHtml);
+
+                    // Procesar los datos específicos y mostrarlos
+                    const summaryData = processData(data);
+                    $('#data-summary').html(summaryData);
+                }
+            });
+        }
+
+        // Función para convertir datos CSV en una tabla HTML
+        function csvToHtmlTable(csvData) {
+            const rows = csvData.split("\n");
+            let tableHtml = "<table border='1'>";
+
+            // Recorrer filas y columnas para construir la tabla
+            rows.forEach(row => {
+                const columns = row.split(",");
+                tableHtml += "<tr>";
+
+                columns.forEach(column => {
+                    tableHtml += "<td>" + column + "</td>";
+                });
+
+                tableHtml += "</tr>";
+            });
+
+            tableHtml += "</table>";
+            return tableHtml;
+        }
+
+
+        // Llamar a la función al cargar la página
+        $(document).ready(function() {
+            loadAndDisplayData();
+        });
+    </script>
+</body>
+</html>
